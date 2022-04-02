@@ -12,11 +12,12 @@ public class Application {
      * Initializing the connection to the database
      */
     private static void initDatabaseConnectionPool(){
-        System.out.println("CONNECTING TO THE DATABASE...");
         dataSource = new HikariDataSource();
         dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/JDBC?");
         dataSource.setUsername("root");
         dataSource.setPassword("Toor123@");
+        dataSource.setPoolName("HIKARIPOOL");
+        dataSource.setMaximumPoolSize(2);
     }
 
     /**
@@ -29,7 +30,7 @@ public class Application {
     // Insert new data into the database
     public static void insertData() throws SQLException {
         Connection connection = dataSource.getConnection();
-        String query = "INSERT INTO Auto(Brand, Nationality) VALUES ('Leff', 'FRA')";
+        String query = "INSERT INTO Auto(Brand, Nationality) VALUES ('Leff9', 'FRA')";
         try(PreparedStatement ps = connection.prepareStatement(query)) {
             ps.executeUpdate();
         }
@@ -55,7 +56,6 @@ public class Application {
     public static void main(String[] args) throws SQLException {
         initDatabaseConnectionPool();
         insertData();
-        closeDatabaseConnectionPool();
         initDatabaseConnectionPool();
         printData();
         closeDatabaseConnectionPool();
