@@ -30,7 +30,7 @@ public class Application {
     // Insert new data into the database
     public static void insertData() throws SQLException {
         Connection connection = dataSource.getConnection();
-        String query = "INSERT INTO Auto(Brand, Nationality) VALUES ('Leff9', 'FRA')";
+        String query = "INSERT INTO Auto(Brand, Nationality) VALUES ('Leff99', 'FRA')";
         try(PreparedStatement ps = connection.prepareStatement(query)) {
             ps.executeUpdate();
         }
