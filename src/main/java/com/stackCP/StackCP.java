@@ -190,7 +190,7 @@ public class StackCP {
         }
     }
 
-    public static void tryExecuteUpdate(String query) throws SQLException {
+    public static void tryExecuteUpdate(String query) throws SQLException{
         Connection conn = null;
         try {
             conn = pool.getConnection();
@@ -198,8 +198,10 @@ public class StackCP {
             try (Statement statement = conn.createStatement()) {
                 statement.executeUpdate(query);
             }
-        }catch (SQLException e) {
-            e.getMessage();
+        } finally {
+            if (conn != null) {
+                pool.returnConnection(conn);
+            }
         }
     }
 
