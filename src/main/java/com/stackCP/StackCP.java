@@ -15,6 +15,9 @@ public class StackCP {
     private String password;
     private int maxPoolSize = 10;
     private int connNum = 0;
+    static StackCP pool = new StackCP(
+            "jdbc:mysql://localhost:3306/JDBC?",
+            "root", "Toor123@", 2);
 
     private static final String SQL_VERIFYCONN = "select 1";
 
@@ -168,17 +171,13 @@ public class StackCP {
         }
     }
 
-    // Just an Example
-    public static void main(String[] args) throws SQLException {
+    public static void tryExecute(String query) throws SQLException {
         Connection conn = null;
-        StackCP pool = new StackCP(
-                "jdbc:mysql://localhost:3306/JDBC?",
-                "root", "Toor123@", 2);
         try {
             conn = pool.getConnection();
+
             try (Statement statement = conn.createStatement()) {
-                ResultSet res = statement.executeQuery("show tables");
-                System.out.println("There are below tables:");
+                ResultSet res = statement.executeQuery(query);
                 while (res.next()) {
                     String tblName = res.getString(1);
                     System.out.println(tblName);
@@ -189,6 +188,17 @@ public class StackCP {
                 pool.returnConnection(conn);
             }
         }
+    }
+
+    // Just an Example
+    public static void main(String[] args) throws SQLException {
+        String query1 = "SELECT * FROM Auto";
+        String query3 = "SELECT * FROM Auto WHERE Nationality='ITA'";
+        String query2 = "show tables";
+        tryExecute(query1);
+        tryExecute(query2);
+        tryExecute(query3);
+
     }
 
 }
