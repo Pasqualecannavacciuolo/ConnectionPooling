@@ -17,7 +17,7 @@ public class StackCP {
     private int connNum = 0;
     static StackCP pool = new StackCP(
             "jdbc:mysql://localhost:3306/JDBC?",
-            "root", "Toor123@", 2);
+            "root", "Toor123@", 5);
 
     private static final String SQL_VERIFYCONN = "select 1";
 
@@ -190,15 +190,48 @@ public class StackCP {
         }
     }
 
+    public static void tryExecuteUpdate(String query) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = pool.getConnection();
+
+            try (Statement statement = conn.createStatement()) {
+                statement.executeUpdate(query);
+            }
+        }catch (SQLException e) {
+            e.getMessage();
+        }
+    }
+
     // Just an Example
     public static void main(String[] args) throws SQLException {
         String query1 = "SELECT * FROM Auto";
         String query3 = "SELECT * FROM Auto WHERE Nationality='ITA'";
         String query2 = "show tables";
-        tryExecute(query1);
-        tryExecute(query2);
-        tryExecute(query3);
+        String query4 = "INSERT INTO Auto(Brand, Nationality) VALUES ('Ferrari', 'ITA')";
 
+        System.out.println("FREE CONNECTIONS: " + pool.freePool);
+        System.out.println("OCCUPIED CONNECTIONS: " + pool.occupiedPool);
+        System.out.println("STAMPA TUTTE LE AUTO");
+        tryExecute(query1);
+        System.out.println("FREE CONNECTIONS: " + pool.freePool);
+        System.out.println("OCCUPIED CONNECTIONS: " + pool.occupiedPool);
+        System.out.println("STAMPA TUTTE LE AUTO ITALIANE");
+        tryExecute(query2);
+        System.out.println("FREE CONNECTIONS: " + pool.freePool);
+        System.out.println("OCCUPIED CONNECTIONS: " + pool.occupiedPool);
+        System.out.println("MOSTRA TABELLE DEL DATABASE JDBC");
+        tryExecute(query3);
+        System.out.println("FREE CONNECTIONS: " + pool.freePool);
+        System.out.println("OCCUPIED CONNECTIONS: " + pool.occupiedPool);
+        System.out.println("INSERISCO UN'AUTO");
+        tryExecuteUpdate(query4);
+        System.out.println("FREE CONNECTIONS: " + pool.freePool);
+        System.out.println("OCCUPIED CONNECTIONS: " + pool.occupiedPool);
+        System.out.println("STAMPA TUTTE LE AUTO");
+        tryExecute(query1);
+        System.out.println("FREE CONNECTIONS: " + pool.freePool);
+        System.out.println("OCCUPIED CONNECTIONS: " + pool.occupiedPool);
     }
 
 }
